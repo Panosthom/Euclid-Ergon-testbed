@@ -1,0 +1,37 @@
+# Researcher work product is tracked; run outputs and local data are not.
+data/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Environments
+.venv/
+venv/
+.env
+
+# Per-student testbed config (copy from testbed.env.example)
+testbed/testbed.env
+
+# Real controller topology has live IPs/SSH keys -- never commit it.
+# Only the sanitized testbed/controller.config.example.json belongs in git.
+config.json
+controller.config.json
+controller/config.json
+
+# Lockfile is intentionally NOT ignored (see README reproducibility section):
+# requirements.lock and uv.lock should be committed.
+
+# Local IDE / Claude Code settings (machine-specific paths; not for the public template)
+.claude/settings.local.json
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/

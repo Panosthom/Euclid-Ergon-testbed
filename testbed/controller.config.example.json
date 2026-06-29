@@ -1,0 +1,24 @@
+{
+  "_README": "SCHEMA/EXAMPLE ONLY. This is NOT the live config and is not read at runtime. The live topology is admin-maintained once on the server Pi at <platform>/controller/config.json (the path CONTROLLER_CONFIG in testbed/testbed.env points to). To bootstrap a fresh testbed: copy this file there and edit the real IPs/users/keys. Run-level fields below (dataset, num_rounds, local_epochs, extra_args, ...) are OVERRIDDEN per run by your ExperimentSpec via testbed/launch.py; only the infrastructure fields (server/clients nodes, paths, ports, venv) are used as-is.",
+
+  "remote_repo": "~/federated-edge-testbed",
+  "venv_activate": "source ~/.venv/fed/bin/activate",
+  "dataset": "mnist",
+  "data_dir": "~/federated-edge-testbed/data/mnist",
+  "log_dir": "~/federated-edge-testbed/logs",
+  "server_port": 8000,
+  "server_start_delay": 10,
+  "server": {
+    "ip": "192.168.1.6",
+    "ssh_ip": "192.168.1.6",
+    "fl_ip": "10.0.0.1",
+    "user": "pi-server",
+    "key": "~/.ssh/id_ed25519"
+  },
+  "clients": [
+    {"id": 0, "ip": "192.168.1.7", "ssh_ip": "192.168.1.7", "fl_ip": "10.0.0.1", "user": "pi-client1", "key": "~/.ssh/id_ed25519", "enable_codecarbon": true, "extra_args": "--local-epochs 5"},
+    {"id": 1, "ip": "192.168.1.9", "ssh_ip": "192.168.1.9", "fl_ip": "10.0.0.2", "user": "pi-client2", "key": "~/.ssh/id_ed25519", "enable_codecarbon": true, "extra_args": "--local-epochs 5"},
+    {"id": 2, "ip": "192.168.1.10", "ssh_ip": "192.168.1.10", "fl_ip": "10.0.0.3", "user": "pi-client3", "key": "~/.ssh/id_ed25519", "enable_codecarbon": true, "extra_args": "--local-epochs 5"},
+    {"id": 3, "ip": "192.168.1.12", "ssh_ip": "192.168.1.12", "fl_ip": "10.0.0.4", "user": "pi-client4", "key": "~/.ssh/id_ed25519", "enable_codecarbon": true, "extra_args": "--local-epochs 5"}
+  ]
+}

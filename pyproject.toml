@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fl-edge-template"
+version = "0.1.0"
+description = "Researcher template for the FL Edge federated-learning platform"
+requires-python = ">=3.10"
+
+# --- Reproducibility: the platform is the single source of version truth -------
+# Pin the platform to an EXACT commit (no floating range). Bumping this line is
+# the only place the platform version changes.
+#
+# Pinned to platform commit 1d17e87, which includes the v2 public API (registry/,
+# extensions/, experiments/api.py, submission.py, config_adapter.py,
+# run_submitted.py, core/, runtime/). This commit is on origin/main.
+#
+# ⚠️ Still note: the platform is not yet pip-installable (no root pyproject.toml),
+# so this direct-reference line won't `pip install` yet -- consume the platform via
+# the submodule + PYTHONPATH fallback (README / activate.sh). Also pull this exact
+# commit onto every Pi. Keep this pin == submodule == the commit on the Pi.
+dependencies = [
+    "fl-edge-platform @ git+https://github.com/Panosthom/Federated-edge-testbed.git@1d17e8729d036ba14b2afb83bca01798910e83ab",
+
+    # Pinned to the platform's tested baseline (mirror of its requirements.txt).
+    "flwr>=1.22,<1.23",
+    "torch==2.2.0",
+    "torchvision==0.17.0",
+    "numpy==1.26.4",
+]
+
+[project.optional-dependencies]
+dev = ["ruff", "pytest"]
+
+# The template ships only researcher work product. `plugins` (and its
+# subpackages) plus the researcher `studies` spec factories must be importable so
+# the platform runtime can resolve `module:callable` references by string.
+# NOTE: spec factories live in `studies`, not `experiments` -- the platform
+# already owns the top-level `experiments` package (see studies/__init__.py).
+[tool.setuptools]
+packages = [
+    "plugins",
+    "plugins.models",
+    "plugins.aggregators",
+    "plugins.clients",
+    "plugins.datasets",
+    "studies",
+    "data_processes",
+    "testbed",
+]
+py-modules = ["register"]

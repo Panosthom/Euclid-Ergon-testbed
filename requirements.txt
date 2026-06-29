@@ -1,0 +1,15 @@
+# Mirror of the pinned dependencies in pyproject.toml for plain `pip install`.
+# The platform commit here MUST match the pin in pyproject.toml and the
+# git-submodule commit (single source of version truth).
+#
+# Pinned to platform commit 1d17e87 (includes the v2 API: registry/, extensions/,
+# experiments/api.py, ...). The platform is not yet pip-installable, so this line
+# won't `pip install` yet -- consume via submodule + PYTHONPATH (README/activate.sh)
+# and pull this exact commit onto every Pi.
+fl-edge-platform @ git+https://github.com/Panosthom/Federated-edge-testbed.git@1d17e8729d036ba14b2afb83bca01798910e83ab
+
+# Platform-tested baseline (do not float).
+flwr>=1.22,<1.23
+torch==2.2.0
+torchvision==0.17.0
+numpy==1.26.4
