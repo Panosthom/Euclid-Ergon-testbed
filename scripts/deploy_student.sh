@@ -56,10 +56,10 @@ PY
 rsync_to() {  # rsync_to <user> <ip> <key> <dest_dir> <src...>  (no --delete: dest is the platform root)
     local user="$1" ip="$2" key="$3" dest="$4"; shift 4
     # -n: do NOT read stdin -- otherwise ssh swallows the while-read loop's topology rows.
-    ssh -n -i "${key/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$user@$ip" "mkdir -p '$dest'"
+    ssh -n -i "${key/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR "$user@$ip" "mkdir -p '$dest'"
     rsync -az \
         --exclude='__pycache__' --exclude='*.pyc' \
-        -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+        -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR" \
         "$@" "$user@$ip:$dest/"
 }
 
@@ -67,10 +67,10 @@ rsync_dir_clean() {  # rsync_dir_clean <user> <ip> <key> <src_dir> <dest_dir>  (
     local user="$1" ip="$2" key="$3" src="$4" dest="$5"
     # --delete is scoped to <dest_dir> only (a student package dir), never the
     # platform root, so stale files from a previous student are removed safely.
-    ssh -n -i "${key/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$user@$ip" "mkdir -p '$dest'"
+    ssh -n -i "${key/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR "$user@$ip" "mkdir -p '$dest'"
     rsync -az --delete \
         --exclude='__pycache__' --exclude='*.pyc' \
-        -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+        -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR" \
         "$src/" "$user@$ip:$dest/"
 }
 
@@ -117,7 +117,7 @@ while IFS=$'\t' read -r role cid ip user key; do
     [[ -n "$ip" ]] || { echo "[WARN] node '$role $cid' has no ssh ip; skipping"; continue; }
     key="${key:-$SSH_KEY}"
     keyfile="${key/#\~/$HOME}"
-    node_home="$(ssh -n -i "$keyfile" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$user@$ip" 'printf %s "$HOME"')"
+    node_home="$(ssh -n -i "$keyfile" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR "$user@$ip" 'printf %s "$HOME"')"
     node_repo="${REMOTE_REPO/#\~/$node_home}"
     if [[ "$role" == "server" ]]; then
         [[ "$MODE" != "data" ]] && push_code "$user" "$ip" "$key" "server" "$node_repo"

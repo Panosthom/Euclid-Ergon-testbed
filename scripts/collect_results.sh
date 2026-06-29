@@ -44,7 +44,7 @@ PY
 
 pull() {  # pull <user> <ip> <key> <remote_path> <local_name>
     local user="$1" ip="$2" key="$3" remote="$4" name="$5"
-    if rsync -az -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+    if rsync -az -e "ssh -i ${key/#\~/$HOME} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR" \
         "$user@$ip:$remote" "$DEST/$name" 2>/dev/null; then
         echo "  + $name"
     else
