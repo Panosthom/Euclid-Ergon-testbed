@@ -23,6 +23,11 @@ fi
 # shellcheck disable=SC1090
 . "$_env"
 
+# Group-writable by default so the SHARED testbed lock + .holder (group 'fledge')
+# can be created/overwritten by any student -- otherwise the first user to run owns
+# them 0644 and the next student gets "Permission denied" on the lock.
+umask 002
+
 if [ -z "${PLATFORM_DIR:-}" ]; then
     echo "activate.sh: PLATFORM_DIR is empty in $_env -- set it to the shared platform path." >&2
     return 1 2>/dev/null || exit 1
