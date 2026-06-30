@@ -54,7 +54,7 @@ cleanup_stale_processes() {
     while IFS=$'\t' read -r nip nuser nkey; do
         [[ -n "$nip" ]] || continue
         nkey="${nkey:-$SSH_KEY}"
-        ssh -n -i "${nkey/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$nuser@$nip" \
+        ssh -n -i "${nkey/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 "$nuser@$nip" \
             "pkill -f server.server; pkill -f client.client; true" >/dev/null 2>&1 || true
     done < <(python3 - "$CONTROLLER_CONFIG" <<'PY'
 import json, sys
@@ -79,7 +79,7 @@ cleanup_deployed_code() {
     while IFS=$'\t' read -r nip nuser nkey; do
         [[ -n "$nip" ]] || continue
         nkey="${nkey:-$SSH_KEY}"
-        ssh -n -i "${nkey/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$nuser@$nip" \
+        ssh -n -i "${nkey/#\~/$HOME}" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 "$nuser@$nip" \
             "cd $repo 2>/dev/null && rm -rf plugins studies data_processes register.py; true" >/dev/null 2>&1 || true
     done < <(python3 - "$CONTROLLER_CONFIG" <<'PY'
 import json, sys
