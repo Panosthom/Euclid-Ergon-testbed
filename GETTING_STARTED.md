@@ -5,11 +5,21 @@ the edge testbed. You only edit files in **this** repo. The FL platform undernea
 (server/client engine, the Raspberry Pis, orchestration) is a fixed dependency you
 do not touch — you call it.
 
-## 1. Connect
+## 1. Where do you develop? (edit anywhere, run on the server)
 
-SSH into the **server** only (e.g. VS Code → Remote-SSH → the server host), and
-open **your own copy** of this template. Everything happens here; you never log
-into the client Pis.
+**You can write code on your own local computer** — you are not forced to work on
+the server. What you *cannot* do locally is **run** an experiment: the dataset and
+the FL platform engine live only on the server, so every run (even simulation)
+happens there. Pick whichever editing setup you prefer:
+
+- **A. Edit directly on the server** (simplest) — VS Code → Remote-SSH → the server
+  host, open **your own copy** of this template, edit and run in the same place.
+- **B. Edit on your local PC, run on the server** (nice if you like a local IDE or
+  Claude) — develop in a **GitHub fork** of this template on your machine, then
+  `git push`; on the server `git pull` and run. See the full loop in
+  [STUDENT_GUIDE.md](STUDENT_GUIDE.md#1-connect--and-pick-how-you-want-to-work).
+
+Either way you never log into the client Pis, and you always **run on the server**.
 
 > You each work in your **own clone** of the template (your own `plugins/`,
 > `data/`, `logs/`) — not one shared folder. All clones depend on the **same**

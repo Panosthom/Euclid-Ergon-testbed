@@ -291,9 +291,14 @@ Every run writes `logs/<name>_<UTCtimestamp>/` containing:
 
 - `manifest.json` — the full resolved spec (audit record);
 - `process_server.log`, `process_client_<id>.log`, `server.log`;
-- `server_rounds.csv` — per-round server metrics;
+- `server_rounds.csv` — per-round server metrics, including the communication
+  **data-volume** columns `model_size_bytes`, `comm_volume_round_bytes` and
+  `comm_volume_cumulative_bytes` (bytes moved server ↔ clients per round);
 - `metrics/` — per-client metrics; `checkpoints/` — model checkpoints;
 - `global_model.pt` — final aggregated model.
+
+`bash scripts/plot.sh` renders these into `plots/`, including `data_volume.png`
+(cumulative + per-round communication volume in MB).
 
 ---
 

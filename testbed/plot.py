@@ -6,6 +6,8 @@ figures the platform produces -- without writing into the read-only platform tre
   - client_metrics.png : per-client + aggregated TRAIN / VAL / LOCAL-TEST
                          (loss, and accuracy or MAE depending on the task) vs round
   - global_metrics.png : centralized GLOBAL-TEST (loss + accuracy/MAE) vs round
+  - data_volume.png    : federated communication volume (MB moved on the wire),
+                         cumulative and per-round (needs the comm_volume_* columns)
 
     bash scripts/plot.sh                       # newest run in logs/
     bash scripts/plot.sh logs/<run_dir>        # a specific run
@@ -50,6 +52,11 @@ def main() -> None:
         plot_server_global_metrics,
     )
 
+    try:
+        from utils.plot_paper_results import plot_data_volume
+    except ImportError:  # older platform without the data-volume metric
+        plot_data_volume = None
+
     out_dir = run_dir / "plots"
     out_dir.mkdir(parents=True, exist_ok=True)
     print(f"[plot] run={run_dir.name}")
@@ -74,6 +81,18 @@ def main() -> None:
         print(f"[plot] + {out_dir / 'global_metrics.png'}  (global-test)")
     except Exception as exc:  # noqa: BLE001
         print(f"[plot] - global_metrics skipped ({exc})")
+
+    # Federated communication data volume (bytes moved on the wire per round).
+    # Reads the comm_volume_* columns of server_rounds.csv; plot_data_volume()
+    # silently no-ops on runs collected before the metric existed.
+    volume_png = out_dir / "data_volume.png"
+    if plot_data_volume is not None:
+        try:
+            plot_data_volume(server_csv, volume_png)
+            if volume_png.exists():
+                print(f"[plot] + {volume_png}  (communication data volume)")
+        except Exception as exc:  # noqa: BLE001
+            print(f"[plot] - data_volume skipped ({exc})")
 
     print(f"[plot] done -> {out_dir}")
 

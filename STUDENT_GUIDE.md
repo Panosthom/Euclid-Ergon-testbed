@@ -109,13 +109,18 @@ cat logs/$(ls -t logs/ | head -1)/server_rounds.csv     # sim
 ```
 
 **Plots for slides/thesis** — turn a run into figures (train / val / local-test /
-global-test, loss + accuracy/MAE vs round):
+global-test, loss + accuracy/MAE vs round, plus the **communication data volume**):
 
 ```bash
 bash scripts/plot.sh                     # newest run
 bash scripts/plot.sh logs/<run_dir>      # a specific run
-# -> logs/<run>/plots/{client_metrics.png, global_metrics.png}
+# -> logs/<run>/plots/{client_metrics.png, global_metrics.png, data_volume.png}
 ```
+
+`data_volume.png` shows the **όγκος δεδομένων** moved on the wire — cumulative and
+per-round MB (server ↔ clients each round). It comes from the `comm_volume_round_bytes`
+/ `comm_volume_cumulative_bytes` / `model_size_bytes` columns the platform now writes
+into `server_rounds.csv`, so `collect` brings it back automatically with every run.
 
 ## How your data is split (handled for you)
 
