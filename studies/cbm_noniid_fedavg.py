@@ -1,4 +1,8 @@
-"""CBM naval-propulsion regression — Non-IID sharding (Dirichlet α=0.3), FedAvg.
+"""CBM naval-propulsion regression — Non-IID temporal sharding, FedAvg.
+
+Each client receives a consecutive time-block of the data, creating realistic
+heterogeneity (different operating conditions across time periods).
+Dirichlet sharding is not supported for regression datasets.
 
     bash scripts/start.sh studies.cbm_noniid_fedavg:make_spec            # simulation
     bash scripts/run_on_testbed.sh studies.cbm_noniid_fedavg:make_spec   # real Pis
@@ -21,8 +25,7 @@ def make_spec() -> ExperimentSpec:
             {
                 "processor": "data_processes.cbm_processor:prepare_dataset",
                 "data_dir": "data/cbm",
-                "shard_mode": "dirichlet",
-                "dirichlet_alpha": 0.3,
+                "shard_mode": "temporal",
             },
         ),
         model=ComponentRef("tabular_mlp", {"source": "plugins.models.tabular_mlp:build_model"}),
@@ -33,5 +36,5 @@ def make_spec() -> ExperimentSpec:
         seed=2025,
         server_address="127.0.0.1:8100",
         output_root=Path("logs"),
-        metadata={"task": "regression", "shard_mode": "dirichlet", "dirichlet_alpha": 0.3, "strategy": "fedavg"},
+        metadata={"task": "regression", "shard_mode": "temporal", "strategy": "fedavg"},
     )
