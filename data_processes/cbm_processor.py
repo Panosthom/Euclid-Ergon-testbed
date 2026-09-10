@@ -21,7 +21,7 @@ import numpy as np
 import torch
 
 # Path to data.txt relative to --data-root (default "data/"); override with --source.
-_DEFAULT_REL = "condition+based+maintenance+of+naval+propulsion+plants/UCI CBM Dataset/data.txt"
+_DEFAULT_REL = "UCI CBM Dataset/data.txt"
 _N_FEATURES = 16  # columns 1..16; columns 17,18 are the two regression targets
 
 

@@ -71,6 +71,7 @@ Everything runs as local processes on the server — fast, no booking, many stud
 at once. It auto-shards your data and streams per-round progress:
 
 ```bash
+cp testbed/testbed.env.example testbed/testbed.env
 bash scripts/start.sh studies.<your_name>:make_spec
 ```
 
