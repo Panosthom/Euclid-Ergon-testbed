@@ -26,7 +26,7 @@ def make_spec() -> ExperimentSpec:
         dataset=ComponentRef(
             "cbm",
             {
-                "processor": "data_processes.cbm_processor:prepare_dataset",
+                "processor": "data_processes.cbm_processor:prepare_dataset_noniid",
                 "data_dir": "data/cbm",
                 "shard_mode": "temporal",
             },

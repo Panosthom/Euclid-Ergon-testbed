@@ -76,3 +76,39 @@ def prepare_dataset(
         "output_dim": int(Y.shape[1]),  # 2
     }
     return train_x, train_y, test_x, test_y, meta
+
+
+def prepare_dataset_noniid(
+    *,
+    dataset: str,
+    data_root: Path,
+    out_dir: Path,  # noqa: ARG001
+    source: Optional[str],
+    label_col: Optional[str],  # noqa: ARG001
+    test_frac: float,
+    seed: int,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, Dict[str, Any]]:
+    """Non-IID variant: training data sorted by lever position (col 0).
+
+    Combined with shard_mode="temporal", each client receives a distinct
+    operating regime (low → high engine load), simulating vessels that
+    operate under heterogeneous conditions. This creates genuine feature
+    distribution shift (covariate shift) across clients.
+
+    Col 0 = lever position (lp): the primary operating-point indicator in
+    the CBM dataset — low lp ≈ anchored/slow, high lp ≈ full speed.
+    """
+    # Reuse the standard load + split + normalise pipeline.
+    train_x, train_y, test_x, test_y, meta = prepare_dataset(
+        dataset=dataset,
+        data_root=data_root,
+        out_dir=out_dir,
+        source=source,
+        label_col=label_col,
+        test_frac=test_frac,
+        seed=seed,
+    )
+    # Sort training samples by lever position (ascending) so that
+    # temporal sharding assigns each client a different load regime.
+    sort_idx = train_x[:, 0].argsort()
+    return train_x[sort_idx], train_y[sort_idx], test_x, test_y, meta
