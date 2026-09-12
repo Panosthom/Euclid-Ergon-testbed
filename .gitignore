@@ -35,3 +35,5 @@ controller/config.json
 .mypy_cache/
 .ruff_cache/
 .ipynb_checkpoints/
+
+outputs/
