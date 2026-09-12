@@ -6,16 +6,19 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import register  # noqa: F401
 
 from experiments.api import ComponentRef, ExperimentSpec
 
+_SEED = int(os.environ.get("FL_SEED", "2025"))
+
 
 def make_spec() -> ExperimentSpec:
     return ExperimentSpec(
-        name="cbm_iid_fedprox",
+        name=f"cbm_iid_fedprox_s{_SEED}",
         dataset=ComponentRef(
             "cbm",
             {
@@ -35,7 +38,7 @@ def make_spec() -> ExperimentSpec:
         client_fn=ComponentRef("default", {"local_epochs": 3, "batch_size": 64}),
         num_rounds=80,
         num_clients=4,
-        seed=2025,
+        seed=_SEED,
         server_address="127.0.0.1:8100",
         output_root=Path("logs"),
         metadata={"task": "regression", "shard_mode": "iid", "strategy": "fedprox", "proximal_mu": 0.1},
