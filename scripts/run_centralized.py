@@ -35,7 +35,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 SEED = int(os.environ.get("FL_SEED", "2025"))
-NUM_ROUND_EQUIV = 80    # "rounds" to train (matches FL num_rounds)
+NUM_ROUND_EQUIV = int(os.environ.get("FL_CENTRAL_ROUNDS", "500"))  # default 500 for convergence
 EPOCHS_PER_ROUND = 3    # local_epochs used by FL clients
 BATCH_SIZE = 64
 LR = 0.01
